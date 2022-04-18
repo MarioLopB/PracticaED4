@@ -7,10 +7,17 @@ import org.junit.*;
 
 public class LinkedEDListTest {
 	private LinkedEDList<String> lista;
+	private LinkedEDList<String> lv;
 	
 	@Before
 	public void test() {
 		 lista= new LinkedEDList<String>();
+		 lv = new LinkedEDList<String>();
+
+		lv.addLast("A");
+		lv.addLast("B");
+		lv.addLast("C");
+
 	}
 
 	@Test
@@ -27,6 +34,20 @@ public class LinkedEDListTest {
 		Assert.assertEquals("(2 3 )", lista.toString());
 		lista.addLast("7");
 		Assert.assertEquals("(2 3 7 )", lista.toString());
+	}
+
+	@Test
+	public void test_Size() throws Exception{
+		lista.addLast("2");
+		Assert.assertFalse(lista.isEmpty());
+		Assert.assertEquals("(2 )", lista.toString());
+		Assert.assertEquals(1, lista.size());
+		lista.addLast("3");
+		Assert.assertEquals("(2 3 )", lista.toString());
+		Assert.assertEquals(2, lista.size());
+		lista.addLast("7");
+		Assert.assertEquals("(2 3 7 )", lista.toString());
+		Assert.assertEquals(3, lista.size());
 	}
 	
 	@Test(expected=EmptyCollectionException.class)
@@ -55,5 +76,8 @@ public class LinkedEDListTest {
 	
 	// TODO  AÑADIR RESTO DE METODOS DE TESTS
 	
-	
+	@Test
+	public void getElemPos() throws Exception{
+		Assert.assertEquals("B", lv.getElemPos(1));
+	}
 }
