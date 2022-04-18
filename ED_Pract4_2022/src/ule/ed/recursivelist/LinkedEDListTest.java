@@ -78,6 +78,8 @@ public class LinkedEDListTest {
 	
 	@Test
 	public void getElemPos() throws Exception{
-		Assert.assertEquals("B", lv.getElemPos(1));
+		Assert.assertEquals("B", lv.getElemPos(2));
+		Assert.assertEquals("A", lv.getElemPos(1));
+		Assert.assertEquals("C", lv.getElemPos(3));
 	}
 }

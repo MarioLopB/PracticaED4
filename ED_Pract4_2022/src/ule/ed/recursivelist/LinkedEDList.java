@@ -141,7 +141,27 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public void addPos(T elem, int position) {
 		// TODO RECURSIVAMENTE
+
+		Node<T> nuevo = new Node<T>(elem);
+
+		if(isEmpty()){
+			this.front= nuevo;
+		} else{
+			Node<T> aux = getNodePos(this.front, position);
+			nuevo.next = aux.next;
+		}
 		
+	}
+
+	private Node<T> getNodePos(Node<T> current, int pos){
+		Node<T> actual = current;
+		if(current == null || pos == 1){
+			actual = current;
+		} else{
+			actual = getNodePos(current.next, pos-1);
+		}
+
+		return actual;
 	}
 
 
@@ -155,7 +175,7 @@ public class LinkedEDList<T> implements EDList<T> {
 		T result;
 
 
-		if(current == null || pos == 0){
+		if(current == null || pos == 1){
 			result = current.elem;
 		} else {
 			result = getElem(current.next, pos-1);
