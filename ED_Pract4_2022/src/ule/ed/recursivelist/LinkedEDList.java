@@ -261,7 +261,29 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public T removelast() throws EmptyCollectionException {
 		// TODO RECURSIVAMENTE
-		return null;
+
+		if(isEmpty())
+			throw new EmptyCollectionException("Lista vacia");
+
+		Node<T> aux = PenulElem(this.front);
+
+		T removed = aux.next.elem;
+
+		aux.next = null;
+
+		return removed;
+
+	}
+
+	private Node<T> PenulElem(Node<T> current){
+		Node<T> actual = null;
+		if(current.next == null || current.next.next == null){
+			actual = current;
+		} else{
+			actual = PenulElem(current.next);
+		}
+
+		return actual;
 	}
 
 
