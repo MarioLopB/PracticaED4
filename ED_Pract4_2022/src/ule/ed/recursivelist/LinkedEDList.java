@@ -229,10 +229,12 @@ public class LinkedEDList<T> implements EDList<T> {
 	private int nTimes(Node<T> current, T elem){
 		int counter;
 
-		if(current.elem.equals(elem)){
-			counter = 1;
-		} else{
+		if(current == null){
+			counter = 0;
+		} else if(current.elem.equals(elem)){
 			counter = 1 + nTimes(current.next, elem);
+		} else{
+			counter = nTimes(current.next, elem);
 		}
 
 		return counter;
@@ -242,11 +244,13 @@ public class LinkedEDList<T> implements EDList<T> {
 		int pos;
 
 		if(current == null){
-			pos = 1;
-		} else if(current.elem.equals(elem) && nelems == 1){
-			pos = 1;
-		} else{
+			pos = 0;
+		} else if(current.elem.equals(elem) && nelems != 0){
 			pos = 1 + getNLast(current.next, elem, nelems-1);
+		} else if (nelems == 0){
+			pos = 0;
+		} else {
+			pos = 1 + getNLast(current.next, elem, nelems);
 		}
 
 		return pos;
