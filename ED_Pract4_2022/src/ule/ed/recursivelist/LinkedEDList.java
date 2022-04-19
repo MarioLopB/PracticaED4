@@ -147,15 +147,16 @@ public class LinkedEDList<T> implements EDList<T> {
 		if(isEmpty()){
 			this.front= nuevo;
 		} else{
-			Node<T> aux = getNodePos(this.front, position);
+			Node<T> aux = getNodePos(this.front, position-1);
 			nuevo.next = aux.next;
+			aux.next = nuevo;
 		}
 		
 	}
 
 	private Node<T> getNodePos(Node<T> current, int pos){
 		Node<T> actual = current;
-		if(current == null || pos == 1){
+		if(current.next == null || pos == 1 || pos < this.size()){
 			actual = current;
 		} else{
 			actual = getNodePos(current.next, pos-1);
@@ -174,7 +175,6 @@ public class LinkedEDList<T> implements EDList<T> {
 	private T getElem(Node<T> current, int pos){
 		T result;
 
-
 		if(current == null || pos == 1){
 			result = current.elem;
 		} else {
@@ -189,7 +189,27 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public int getPosFirst(T elem) {
 		// TODO RECURSIVAMENTE
-		return 0;
+		int pos = getNFirst(this.front, elem);
+
+		if(pos > this.size()){
+			pos = 0;
+		}
+
+		return pos;
+	}
+
+	private int getNFirst(Node<T> current, T elem){
+		int pos;
+
+		if(current == null){
+			pos = 1;
+		} else if(current.elem.equals(elem)){
+			pos = 1;
+		}  else{
+			pos = 1 + getNFirst(current.next, elem);
+		}
+
+		return pos;
 	}
 
 
@@ -197,7 +217,39 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public int getPosLast(T elem) {
 		// TODO RECURSIVAMENTE
-		return 0;
+		int pos = getNLast(this.front, elem, nTimes(this.front, elem));
+
+		if(pos > this.size()){
+			pos = 0;
+		}
+
+		return pos;
+	}
+
+	private int nTimes(Node<T> current, T elem){
+		int counter;
+
+		if(current.elem.equals(elem)){
+			counter = 1;
+		} else{
+			counter = 1 + nTimes(current.next, elem);
+		}
+
+		return counter;
+	}
+
+	private int getNLast(Node<T> current, T elem, int nelems){
+		int pos;
+
+		if(current == null){
+			pos = 1;
+		} else if(current.elem.equals(elem) && nelems == 1){
+			pos = 1;
+		} else{
+			pos = 1 + getNLast(current.next, elem, nelems-1);
+		}
+
+		return pos;
 	}
 
 
