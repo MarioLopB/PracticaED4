@@ -291,7 +291,16 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public T removePenult() throws EmptyCollectionException {
 		// TODO RECURSIVAMENTE
-		return null;
+		if(isEmpty())
+			throw new EmptyCollectionException("Lista Vacia");
+		if(this.front.next == null)
+			throw new NoSuchElementException();
+
+		Node<T> aux = getAntePenult(this.front);
+		T removed = aux.next.elem;
+		aux.next = aux.next.next;
+
+		return removed;
 	}
 
 
@@ -303,17 +312,13 @@ public class LinkedEDList<T> implements EDList<T> {
 		if(isEmpty())
 			throw new EmptyCollectionException("Lista vacia");
 
-		T removed = null;
 
-		if(this.front.next == null){
-			removed = this.front.elem;
-			this.front = null;
-		} else{
-			removed = this.front.elem;
-			this.front = this.front.next;
-		}
 
-		return removed;
+		return null;
+	}
+
+	private Node<T> firstElem(Node<T> current){
+		return null;
 	}
 
 

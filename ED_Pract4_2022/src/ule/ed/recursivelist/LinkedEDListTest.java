@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
+import java.util.NoSuchElementException;
+
 
 public class LinkedEDListTest {
 	private LinkedEDList<String> lista;
@@ -130,6 +132,28 @@ public class LinkedEDListTest {
 		Assert.assertEquals("(A B B C )", lv.toString());
 		Assert.assertEquals("C", lv.removelast());
 		Assert.assertEquals("(A B B )", lv.toString());
+	}
+
+	@Test(expected = EmptyCollectionException.class)
+	public void test_removePenultEmpty() throws Exception{
+		lista.removePenult();
+	}
+
+	@Test(expected = NoSuchElementException.class)
+	public void test_removePenultOneElem() throws Exception{
+		lista.addLast("2");
+		lista.removePenult();
+	}
+
+	@Test
+	public void test_removePenult() throws Exception{
+		lv.addPos("A", 6);
+		lv.addPos("B", 3);
+		Assert.assertEquals("(A B B C A )", lv.toString());
+		Assert.assertEquals("C", lv.removePenult());
+		Assert.assertEquals("(A B B A )", lv.toString());
+		Assert.assertEquals("B", lv.removePenult());
+		Assert.assertEquals("(A B A )", lv.toString());
 	}
 
 }
