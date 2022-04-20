@@ -1,5 +1,6 @@
 package ule.ed.recursivelist;
 
+import javax.swing.text.Element;
 import java.beans.PropertyEditorSupport;
 import java.util.NoSuchElementException;
 
@@ -311,10 +312,41 @@ public class LinkedEDList<T> implements EDList<T> {
 
 		if(isEmpty())
 			throw new EmptyCollectionException("Lista vacia");
+		if(firstElemPrev(this.front, elem) == null)
+			throw new NoSuchElementException();
 
+		Node<T> firstprev = firstElemPrev(this.front, elem);
 
+		T removed = elem;
 
-		return null;
+		if(elem.equals(this.front.elem)){
+			if(this.front.next == null){
+				this.front = null;
+			} else{
+				this.front = this.front.next;
+			}
+		} else if(firstprev.next.next == null){
+			firstprev.next = null;
+		} else{
+			firstprev.next = firstprev.next.next;
+		}
+
+		return removed;
+	}
+
+	private Node<T> firstElemPrev(Node<T> current, T elem){
+		Node<T> prev;
+
+		if(current == null || current.next == null){
+			prev = null;
+		} else if(current.next.elem.equals(elem)){
+			prev = current;
+		}else{
+			prev = firstElemPrev(current.next, elem);
+		}
+
+		return prev;
+
 	}
 
 	private Node<T> firstElem(Node<T> current){
@@ -329,6 +361,7 @@ public class LinkedEDList<T> implements EDList<T> {
 		return null;
 	}
 
+	
 
 
 	@Override
