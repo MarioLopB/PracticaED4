@@ -179,4 +179,27 @@ public class LinkedEDListTest {
 		Assert.assertEquals("(B B )", lv.toString());
 	}
 
+	@Test(expected = EmptyCollectionException.class)
+	public void test_removeLastElemEmpty() throws Exception{
+		lista.removeLastElem("A");
+	}
+
+	@Test(expected = NoSuchElementException.class)
+	public void test_removeLastElemNoElem() throws Exception{
+		lv.removeLastElem("F");
+	}
+
+	@Test
+	public void test_removeLastElem() throws Exception{
+		lv.addPos("A", 6);
+		lv.addPos("B", 3);
+		Assert.assertEquals("(A B B C A )", lv.toString());
+		Assert.assertEquals("A", lv.removeLastElem("A"));
+		Assert.assertEquals("(A B B C )", lv.toString());
+		Assert.assertEquals("B", lv.removeLastElem("B"));
+		Assert.assertEquals("(A B C )", lv.toString());
+		Assert.assertEquals("A", lv.removeLastElem("A"));
+		Assert.assertEquals("(B C )", lv.toString());
+	}
+
 }

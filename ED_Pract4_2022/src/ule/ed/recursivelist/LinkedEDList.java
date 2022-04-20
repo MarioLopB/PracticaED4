@@ -339,7 +339,7 @@ public class LinkedEDList<T> implements EDList<T> {
 
 		if(current == null || current.next == null){
 			prev = null;
-		} else if(current.next.elem.equals(elem)){
+		}else if(current.next.elem.equals(elem) || this.front.elem.equals(elem)){
 			prev = current;
 		}else{
 			prev = firstElemPrev(current.next, elem);
@@ -349,19 +349,60 @@ public class LinkedEDList<T> implements EDList<T> {
 
 	}
 
-	private Node<T> firstElem(Node<T> current){
-		return null;
-	}
-
 
 
 	@Override
 	public T removeLastElem(T elem) throws EmptyCollectionException {
 		// TODO RECURSIVAMENTE
-		return null;
+		if(isEmpty())
+			throw new EmptyCollectionException("Lista vacia");
+
+		Node<T> lastprev  = lastElemprev(this.front, elem, nTimes(this.front, elem));
+
+		if(lastprev == null)
+			throw new NoSuchElementException();
+
+		T removed = elem;
+
+		if(this.front.elem.equals(elem) && lastprev.elem.equals(elem)){
+			if(this.front.next == null){
+				this.front = null;
+			} else {
+				this.front = this.front.next;
+			}
+		} else if (lastprev.next.next == null){
+			lastprev.next = null;
+		} else {
+			lastprev.next = lastprev.next.next;
+		}
+
+		return removed;
 	}
 
-	
+	private Node<T> lastElemprev(Node<T> current, T elem, int nelems){
+		Node<T> prev;
+
+		if(current == null || current.next == null){
+			prev = null;
+		} else if(this.front.elem.equals(elem) && current == this.front){
+			if(nelems!=1){
+				prev = lastElemprev(current.next, elem, nelems - 1);
+			} else {
+				prev = current;
+			}
+		}else if(current.next.elem.equals(elem)){
+			if(nelems != 1) {
+				prev = lastElemprev(current.next, elem, nelems - 1);
+			} else {
+				prev = current;
+			}
+		} else {
+			prev = lastElemprev(current.next, elem, nelems);
+		}
+
+		return prev;
+	}
+
 
 
 	@Override
