@@ -202,4 +202,17 @@ public class LinkedEDListTest {
 		Assert.assertEquals("(B C )", lv.toString());
 	}
 
+	@Test
+	public void test_reverse() throws Exception{
+		Assert.assertEquals("(A B C )", lv.toString());
+		Assert.assertEquals("(B C A )", lv.reverse().toString());
+	}
+
+	@Test
+	public void test_addFirst() throws Exception{
+		lista.addFirst("A");
+		lista.addFirst("B");
+		Assert.assertEquals("(B A )", lista.toString());
+	}
+
 }

@@ -408,8 +408,32 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public EDList<T> reverse() {
 		// TODO RECURSIVAMENTE
-		return null;
+		EDList<T> reverse = reverseElems(this.front);
+		return reverse;
 	}
+
+	private LinkedEDList<T> reverseElems(Node<T> current){
+		LinkedEDList<T> reverse = new LinkedEDList<T>();
+
+		if(current != null){
+			reverse.addFirst(current.elem);
+			reverseElems(current.next);
+		}
+
+		return reverse;
+	}
+
+	public void addFirst(T elem){
+		Node<T> nuevo = new Node<T>(elem);
+		if(isEmpty()){
+			this.front = nuevo;
+		} else {
+			nuevo.next = this.front;
+			this.front = nuevo;
+		}
+	}
+
+
 
 
 
