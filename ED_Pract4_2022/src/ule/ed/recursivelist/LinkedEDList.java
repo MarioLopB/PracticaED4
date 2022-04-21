@@ -408,16 +408,19 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public EDList<T> reverse() {
 		// TODO RECURSIVAMENTE
-		EDList<T> reverse = reverseElems(this.front);
-		return reverse;
+		LinkedEDList<T> reverse = new LinkedEDList<T>();
+
+		EDList<T> result = reverseElems(this.front, reverse);
+
+
+		return result;
 	}
 
-	private LinkedEDList<T> reverseElems(Node<T> current){
-		LinkedEDList<T> reverse = new LinkedEDList<T>();
+	private LinkedEDList<T> reverseElems(Node<T> current, LinkedEDList<T> reverse){
 
 		if(current != null){
 			reverse.addFirst(current.elem);
-			reverseElems(current.next);
+			reverseElems(current.next, reverse);
 		}
 
 		return reverse;
@@ -432,15 +435,36 @@ public class LinkedEDList<T> implements EDList<T> {
 			this.front = nuevo;
 		}
 	}
-
-
-
-
+	
 
 	@Override
 	public String toStringFromUntilReverse(int from, int until) {
 		// TODO RECURSIVAMENTE
-		return null;
+		if(from <= 0 || until <= 0 || from < until)
+			throw new IllegalArgumentException();
+
+		if(from > this.size())
+			from = this.size();
+
+		StringBuffer cadena = new StringBuffer();
+		cadena.append("(");
+		cadena.append(toStringUntil(from, until));
+		cadena.append(")");
+		return cadena.toString();
+	}
+
+	private String toStringUntil(int from, int until){
+		StringBuffer cadena = new StringBuffer();
+
+		T elem = this.getElemPos(from);
+
+		if(elem == null || from < until){
+			cadena.append("");
+		} else{
+			cadena.append(elem + " " + toStringUntil(from-1, until));
+		}
+
+		return cadena.toString();
 	}
 
 
