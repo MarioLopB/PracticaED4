@@ -2,6 +2,7 @@ package ule.ed.recursivelist;
 
 import javax.swing.text.Element;
 import java.beans.PropertyEditorSupport;
+import java.nio.channels.NoConnectionPendingException;
 import java.util.NoSuchElementException;
 
 
@@ -170,6 +171,9 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public T getElemPos(int position) {
 		// TODO RECURSIVAMENTE
+		if(position < 1 || position > this.size())
+			throw new IllegalArgumentException();
+
 		return getElem(front, position);
 	}
 
@@ -190,11 +194,13 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public int getPosFirst(T elem) {
 		// TODO RECURSIVAMENTE
+		if(elem==null)
+			throw new NullPointerException();
+
 		int pos = getNFirst(this.front, elem);
 
-		if(pos > this.size()){
-			pos = 0;
-		}
+		if(pos > this.size())
+			throw new NoSuchElementException();
 
 		return pos;
 	}
@@ -218,11 +224,13 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public int getPosLast(T elem) {
 		// TODO RECURSIVAMENTE
+		if(elem==null)
+			throw new NullPointerException();
+
 		int pos = getNLast(this.front, elem, nTimes(this.front, elem));
 
-		if(pos > this.size()){
-			pos = 0;
-		}
+		if(pos == 0)
+			throw new NoSuchElementException();
 
 		return pos;
 	}
@@ -312,8 +320,6 @@ public class LinkedEDList<T> implements EDList<T> {
 
 		if(isEmpty())
 			throw new EmptyCollectionException("Lista vacia");
-		if(firstElemPrev(this.front, elem) == null)
-			throw new NoSuchElementException();
 
 		Node<T> firstprev = firstElemPrev(this.front, elem);
 
@@ -325,6 +331,8 @@ public class LinkedEDList<T> implements EDList<T> {
 			} else{
 				this.front = this.front.next;
 			}
+		} else if(firstElemPrev(this.front, elem) == null) {
+			throw new NoSuchElementException();
 		} else if(firstprev.next.next == null){
 			firstprev.next = null;
 		} else{
@@ -383,7 +391,12 @@ public class LinkedEDList<T> implements EDList<T> {
 		Node<T> prev;
 
 		if(current == null || current.next == null){
-			prev = null;
+			if(this.front.elem.equals(elem) && current == this.front){
+				prev = current;
+			} else {
+				prev = null;
+			}
+
 		} else if(this.front.elem.equals(elem) && current == this.front){
 			if(nelems!=1){
 				prev = lastElemprev(current.next, elem, nelems - 1);
@@ -435,7 +448,7 @@ public class LinkedEDList<T> implements EDList<T> {
 			this.front = nuevo;
 		}
 	}
-	
+
 
 	@Override
 	public String toStringFromUntilReverse(int from, int until) {
@@ -472,7 +485,37 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public String toStringEvenOdd() {
 		// TODO RECURSIVAMENTE
-		return null;
+		StringBuffer cadena = new StringBuffer();
+
+		cadena.append("(");
+		cadena.append(oddToString(1,this.size()));
+		cadena.append(")");
+
+		return cadena.toString();
+	}
+
+	private String oddToString(int pospar, int posimpar){
+		StringBuffer cadena = new StringBuffer();
+
+		T elem;
+
+		if(pospar <= this.size()){
+			if(pospar % 2 == 0) {
+				elem = this.getElemPos(pospar);
+				cadena.append(elem + " " + oddToString(pospar + 1, posimpar));
+			}else{
+				cadena.append(oddToString(pospar+1, posimpar));
+			}
+		} else if(pospar > this.size() && posimpar > 0){
+			if(posimpar % 2 != 0){
+				elem = this.getElemPos(posimpar);
+				cadena.append(elem + " " + oddToString(pospar, posimpar-1));
+			} else{
+				cadena.append(oddToString(pospar, posimpar-1));
+			}
+		}
+
+		return cadena.toString();
 	}
 	
 	
