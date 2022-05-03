@@ -76,6 +76,11 @@ public class LinkedEDListTest {
 
 	}
 
+	@Test(expected = NullPointerException.class)
+	public void test_AddAntePunultNull() throws Exception{
+		lv.addAntePenult(null);
+	}
+
 	@Test
 	public void test_AddAntePenultimoEmpty(){
 		lista.addAntePenult("1");
@@ -84,11 +89,27 @@ public class LinkedEDListTest {
 	
 	// TODO  AÑADIR RESTO DE METODOS DE TESTS
 
+	@Test(expected = IllegalArgumentException.class)
+	public void test_addPos_Pos0() throws Exception{
+		lv.addPos("F", 0);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void test_addPos_PosNull() throws Exception{
+		lv.addPos(null, 2);
+	}
+
 	@Test
 	public void test_addPos() throws Exception{
 		lv.addPos("D", 2);
-		Assert.assertEquals("(A D B C )", lv.toString());
-		Assert.assertEquals(4, lv.size());
+		lv.addPos("F",3);
+		Assert.assertEquals("(A D F B C )", lv.toString());
+		lv.addPos("G", 6);
+		lv.addPos("H", 2);
+		Assert.assertEquals("(A H D F B C G )", lv.toString());
+		lv.addPos("O", 1);
+		Assert.assertEquals("(O A H D F B C G )", lv.toString());
+		Assert.assertEquals(8, lv.size());
 	}
 
 	@Test
@@ -131,7 +152,6 @@ public class LinkedEDListTest {
 		Assert.assertEquals("(A B B C A )", lv.toString());
 		Assert.assertEquals(2, lv.getPosFirst("B"));
 		Assert.assertEquals(1, lv.getPosFirst("A"));
-		Assert.assertEquals(0, lv.getPosFirst("Z"));
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -189,6 +209,26 @@ public class LinkedEDListTest {
 		Assert.assertEquals("(A B B A )", lv.toString());
 		Assert.assertEquals("B", lv.removePenult());
 		Assert.assertEquals("(A B A )", lv.toString());
+		Assert.assertEquals("B", lv.removePenult());
+		Assert.assertEquals("(A A )", lv.toString());
+		Assert.assertEquals("A", lv.removePenult());
+		Assert.assertEquals("(A )", lv.toString());
+
+	}
+
+	@Test(expected = EmptyCollectionException.class)
+	public void test_removelastEmpty() throws Exception{
+		lista.removelast();
+	}
+
+	@Test
+	public void test_removelast() throws Exception{
+		Assert.assertEquals("C", lv.removelast());
+		Assert.assertEquals("(A B )", lv.toString());
+		Assert.assertEquals("B", lv.removelast());
+		Assert.assertEquals("(A )", lv.toString());
+		Assert.assertEquals("A", lv.removelast());
+		Assert.assertEquals("()", lv.toString());
 	}
 
 	@Test(expected = EmptyCollectionException.class)
@@ -219,9 +259,25 @@ public class LinkedEDListTest {
 
 	}
 
+	@Test
+	public void test_removeFirstElem2()throws Exception{
+		lv.addLast("B");
+		Assert.assertEquals("(A B C B )", lv.toString());
+		Assert.assertEquals("B", lv.removeFirstElem("B"));
+		Assert.assertEquals("(A C B )", lv.toString());
+		Assert.assertEquals("C", lv.removeFirstElem("C"));
+		Assert.assertEquals("(A B )", lv.toString());
+	}
+
+
 	@Test(expected = EmptyCollectionException.class)
 	public void test_removeLastElemEmpty() throws Exception{
 		lista.removeLastElem("A");
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void test_removeLastElemNull() throws Exception{
+		lv.removeLastElem(null);
 	}
 
 	@Test(expected = NoSuchElementException.class)
@@ -248,6 +304,21 @@ public class LinkedEDListTest {
 	}
 
 	@Test
+	public void test_removeLastElem2() throws Exception{
+		lv.addPos("B", 3);
+		Assert.assertEquals("(A B B C )", lv.toString());
+		Assert.assertEquals("A", lv.removeLastElem("A"));
+		Assert.assertEquals("(B B C )", lv.toString());
+		Assert.assertEquals("B", lv.removeLastElem("B"));
+		Assert.assertEquals("(B C )", lv.toString());
+		Assert.assertEquals("B", lv.removeLastElem("B"));
+		Assert.assertEquals("(C )", lv.toString());
+		Assert.assertEquals("C", lv.removeLastElem("C"));
+		Assert.assertEquals("()", lv.toString());
+
+	}
+
+	@Test
 	public void test_reverse() throws Exception{
 		Assert.assertEquals("(A B C )", lv.toString());
 		Assert.assertEquals("(C B A )", lv.reverse().toString());
@@ -261,8 +332,13 @@ public class LinkedEDListTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void test_toStringFromUntilReverse0orNeg() throws Exception{
+	public void test_toStringFromUntilReverse0() throws Exception{
 		lv.toStringFromUntilReverse(0,0);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void test_toStringFromUntilReverseNeg() throws Exception{
+		lv.toStringFromUntilReverse(1,-2);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -277,6 +353,12 @@ public class LinkedEDListTest {
 		Assert.assertEquals("(A B B C A )", lv.toString());
 		Assert.assertEquals("(C B B )", lv.toStringFromUntilReverse(4,2));
 		Assert.assertEquals("(A C B B )", lv.toStringFromUntilReverse(6, 2));
+		Assert.assertEquals("(C B )", lv.toStringFromUntilReverse(4, 3));
+		Assert.assertEquals("(A C B B A )", lv.toStringFromUntilReverse(7, 1));
+		Assert.assertEquals("(A )", lv.toStringFromUntilReverse(1, 1));
+		Assert.assertEquals("(B B )", lv.toStringFromUntilReverse(3, 2));
+		Assert.assertEquals("(A )", lv.toStringFromUntilReverse(34,5));
+
 	}
 
 	@Test

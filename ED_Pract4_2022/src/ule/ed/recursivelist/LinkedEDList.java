@@ -111,6 +111,9 @@ public class LinkedEDList<T> implements EDList<T> {
 	@Override
 	public void addAntePenult(T elem) {
 		// TODO RECURSIVAMENTE
+		if(elem == null)
+			throw new NullPointerException();
+
 		Node<T> nuevo = new Node<T>(elem);
 
 		if(isEmpty()){
@@ -144,11 +147,19 @@ public class LinkedEDList<T> implements EDList<T> {
 	public void addPos(T elem, int position) {
 		// TODO RECURSIVAMENTE
 
+		if(elem == null)
+			throw new NullPointerException();
+		if(position <= 0)
+			throw new IllegalArgumentException();
+
 		Node<T> nuevo = new Node<T>(elem);
 
 		if(isEmpty()){
 			this.front= nuevo;
-		} else{
+		} else if(position == 1){
+			nuevo.next = this.front;
+			this.front = nuevo;
+		}else{
 			Node<T> aux = getNodePos(this.front, position-1);
 			nuevo.next = aux.next;
 			aux.next = nuevo;
@@ -158,7 +169,7 @@ public class LinkedEDList<T> implements EDList<T> {
 
 	private Node<T> getNodePos(Node<T> current, int pos){
 		Node<T> actual = current;
-		if(current.next == null || pos == 1 || pos < this.size()){
+		if(current.next == null || pos == 1){
 			actual = current;
 		} else{
 			actual = getNodePos(current.next, pos-1);
@@ -274,11 +285,18 @@ public class LinkedEDList<T> implements EDList<T> {
 		if(isEmpty())
 			throw new EmptyCollectionException("Lista vacia");
 
-		Node<T> aux = PenulElem(this.front);
+		T removed;
 
-		T removed = aux.next.elem;
+		if(this.front.next == null){
+			removed = this.front.elem;
+			this.front = null;
+		} else{
+			Node<T> aux = PenulElem(this.front);
 
-		aux.next = null;
+			removed = aux.next.elem;
+
+			aux.next = null;
+		}
 
 		return removed;
 
@@ -305,9 +323,16 @@ public class LinkedEDList<T> implements EDList<T> {
 		if(this.front.next == null)
 			throw new NoSuchElementException();
 
-		Node<T> aux = getAntePenult(this.front);
-		T removed = aux.next.elem;
-		aux.next = aux.next.next;
+		T removed;
+
+		if(this.front.next.next == null){
+			removed = this.front.elem;
+			this.front = this.front.next;
+		} else{
+			Node<T> aux = getAntePenult(this.front);
+			removed = aux.next.elem;
+			aux.next = aux.next.next;
+		}
 
 		return removed;
 	}
@@ -364,6 +389,8 @@ public class LinkedEDList<T> implements EDList<T> {
 		// TODO RECURSIVAMENTE
 		if(isEmpty())
 			throw new EmptyCollectionException("Lista vacia");
+		if(elem == null)
+			throw new NullPointerException();
 
 		Node<T> lastprev  = lastElemprev(this.front, elem, nTimes(this.front, elem));
 
@@ -398,7 +425,7 @@ public class LinkedEDList<T> implements EDList<T> {
 			}
 
 		} else if(this.front.elem.equals(elem) && current == this.front){
-			if(nelems!=1){
+			if(nelems!=1 && !(current.next.elem.equals(elem))){
 				prev = lastElemprev(current.next, elem, nelems - 1);
 			} else {
 				prev = current;
@@ -461,7 +488,9 @@ public class LinkedEDList<T> implements EDList<T> {
 
 		StringBuffer cadena = new StringBuffer();
 		cadena.append("(");
-		cadena.append(toStringUntil(from, until));
+		if(!(isEmpty())){
+			cadena.append(toStringUntil(from, until));
+		}
 		cadena.append(")");
 		return cadena.toString();
 	}
@@ -473,7 +502,9 @@ public class LinkedEDList<T> implements EDList<T> {
 
 		if(elem == null || from < until){
 			cadena.append("");
-		} else{
+		} else if(from == 1){
+			cadena.append(elem + " ");
+		}else{
 			cadena.append(elem + " " + toStringUntil(from-1, until));
 		}
 
